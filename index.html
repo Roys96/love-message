@@ -3,37 +3,44 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>For You ❤️</title>
+<title>For Adri ❤️</title>
 
 <style>
 
 body{
 margin:0;
+font-family:system-ui;
 height:100vh;
 display:flex;
 align-items:center;
 justify-content:center;
-font-family:sans-serif;
-background:linear-gradient(135deg,#ff6ec4,#7873f5);
+background:linear-gradient(135deg,#ff8ac6,#7b8cff);
 overflow:hidden;
 color:white;
+text-align:center;
 }
 
-/* envelope */
+#intro{
+position:absolute;
+font-size:24px;
+animation:fade 4s forwards;
+}
+
+@keyframes fade{
+0%{opacity:0}
+40%{opacity:1}
+80%{opacity:1}
+100%{opacity:0}
+}
 
 .envelope{
-width:200px;
-height:140px;
+display:none;
+width:220px;
+height:150px;
 background:white;
+border-radius:12px;
 position:relative;
 cursor:pointer;
-border-radius:6px;
-display:flex;
-align-items:center;
-justify-content:center;
-color:#ff4d6d;
-font-weight:bold;
 }
 
 .envelope:before{
@@ -41,67 +48,52 @@ content:"";
 position:absolute;
 top:0;
 left:0;
-width:0;
-height:0;
-border-left:100px solid transparent;
-border-right:100px solid transparent;
-border-bottom:70px solid #ff4d6d;
+border-left:110px solid transparent;
+border-right:110px solid transparent;
+border-bottom:75px solid #ff4d6d;
 }
 
 .tap{
 position:absolute;
-bottom:-30px;
-font-size:14px;
+bottom:-35px;
+left:50%;
+transform:translateX(-50%);
 }
-
-/* card */
 
 .card{
-position:absolute;
-background:white;
-color:black;
-padding:25px;
-border-radius:16px;
-width:80%;
-max-width:300px;
-text-align:center;
 display:none;
-box-shadow:0 10px 30px rgba(0,0,0,0.3);
-animation:pop 0.7s ease;
-}
-
-@keyframes pop{
-0%{transform:scale(0)}
-100%{transform:scale(1)}
+background:white;
+color:#333;
+padding:25px;
+border-radius:18px;
+width:85%;
+max-width:340px;
 }
 
 #message{
-margin-top:10px;
-min-height:60px;
-font-size:18px;
+min-height:140px;
 }
 
-/* hearts */
+.game{
+display:none;
+}
+
+button{
+padding:10px 16px;
+border:none;
+border-radius:12px;
+margin:6px;
+font-size:16px;
+cursor:pointer;
+}
+
+.yes{background:#ff4d6d;color:white}
+.no{background:#ccc}
 
 .heart{
 position:absolute;
+font-size:22px;
 color:#ff4d6d;
-font-size:20px;
-animation:float 6s linear infinite;
-}
-
-@keyframes float{
-
-0%{
-transform:translateY(100vh);
-opacity:1;
-}
-
-100%{
-transform:translateY(-10vh);
-opacity:0;
-}
-
 }
 
 </style>
@@ -110,96 +102,170 @@ opacity:0;
 
 <body>
 
-<div class="envelope" onclick="openCard()">
-
-Open
-
-<div class="tap">
-Tap to open 💌
+<div id="intro">
+Adri… someone special prepared something for you ❤️
 </div>
 
-</div>
-
+<div class="envelope" id="env" onclick="openCard()"></div>
+<div class="tap" id="tap">Tap to open Sonai 💌</div>
 
 <div class="card" id="card">
 
-<h2>Hi ❤️</h2>
+<h2>Hi Tiyasha ❤️</h2>
 
 <div id="message"></div>
 
 </div>
 
+<div class="game" id="game">
 
-<audio id="music" loop>
+<h2>Catch the hearts Adri ❤️</h2>
+<p>Tap 5 hearts</p>
 
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-110262.mp3">
+<div id="score">0 / 5</div>
 
-</audio>
+</div>
 
+<div id="final" style="display:none">
+
+<h2>Did this make you smile?</h2>
+
+<button class="yes" onclick="yes()">YES ❤️</button>
+
+<button class="no" id="no" onmouseover="move()">NO 🙈</button>
+
+</div>
 
 <script>
 
+setTimeout(()=>{
+document.getElementById("intro").style.display="none"
+document.getElementById("env").style.display="block"
+},4000)
+
+let text=`Hi Tiyasha...
+
+or should I say my Adri,
+my Baban,
+my cute Puchki,
+my sweet Sonai ❤️
+
+I didn't know the best way
+to tell you something...
+
+so I made this little page
+just for you.
+
+— Mr. Roy 🙂`
+
+let i=0
+
 function openCard(){
 
-document.querySelector(".envelope").style.display="none";
+document.getElementById("env").style.display="none"
+document.getElementById("tap").style.display="none"
+document.getElementById("card").style.display="block"
 
-document.getElementById("card").style.display="block";
-
-document.getElementById("music").play();
-
-typing();
+typing()
 
 }
-
-
-/* typing text */
-
-let text="I just wanted to say... you make my world brighter every time I see you 😊❤️";
-
-let i=0;
 
 function typing(){
 
-if(i<text.length){
+if(i < text.length){
 
-document.getElementById("message").innerHTML+=text.charAt(i);
+document.getElementById("message").innerHTML += text.charAt(i)
 
-i++;
+i++
 
-setTimeout(typing,50);
+setTimeout(typing,40)
+
+}else{
+
+setTimeout(startGame,2000)
+
+}
+
+}
+
+function startGame(){
+
+document.getElementById("card").style.display="none"
+document.getElementById("game").style.display="block"
+
+}
+
+let score=0
+
+function spawnHeart(){
+
+let h=document.createElement("div")
+
+h.className="heart"
+
+h.innerHTML="❤️"
+
+h.style.left=Math.random()*90+"vw"
+
+h.style.top="0px"
+
+h.onclick=()=>{
+
+score++
+
+document.getElementById("score").innerText=score+" / 5"
+
+h.remove()
+
+if(score>=5){
+
+document.getElementById("game").style.display="none"
+
+document.getElementById("final").style.display="block"
 
 }
 
 }
 
+document.body.appendChild(h)
 
-/* floating hearts */
+let fall=setInterval(()=>{
 
-function createHeart(){
+let y=h.offsetTop+5
 
-let heart=document.createElement("div");
+h.style.top=y+"px"
 
-heart.classList.add("heart");
+if(y>window.innerHeight){
 
-heart.innerHTML="❤️";
+h.remove()
 
-heart.style.left=Math.random()*100+"vw";
-
-heart.style.fontSize=Math.random()*20+10+"px";
-
-heart.style.animationDuration=Math.random()*3+3+"s";
-
-document.body.appendChild(heart);
-
-setTimeout(()=>{
-
-heart.remove();
-
-},6000);
+clearInterval(fall)
 
 }
 
-setInterval(createHeart,400);
+},30)
+
+}
+
+setInterval(spawnHeart,1200)
+
+function yes(){
+
+document.body.innerHTML="<h1>Mr. Roy is very happy now ❤️</h1>"
+
+}
+
+function move(){
+
+let b=document.getElementById("no")
+
+b.style.position="absolute"
+
+b.style.left=Math.random()*80+"vw"
+
+b.style.top=Math.random()*80+"vh"
+
+}
 
 </script>
 
